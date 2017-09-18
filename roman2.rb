@@ -28,10 +28,10 @@ class Translator
     @num = ""
     (1..int).each do |i|
       @num = ""
-      if i > 10
+      if i >= 10
         @num = upto_forty(i)
-      elsif i <= 10
-        @num = upto_ten(i)
+      elsif i < 10
+        @num = upto_nine(i)
       end
       ary << @num
     end
@@ -39,10 +39,16 @@ class Translator
   end
 
   def upto_forty(i)
-    ("X" * (i / 10)) + upto_ten(i - 10)
+    tens = ("X" * (i / 10))
+    if i.digits.first == 0
+      tens   
+    else
+      ones = upto_nine(i.digits.first)
+      tens + ones
+    end
   end
 
-  def upto_ten(i)
+  def upto_nine(i)
     if @roman.key?(i)
       @ones = @roman[i]
     else
@@ -52,6 +58,6 @@ class Translator
 end
 
 trans = Translator.new
-ary = trans.translate_upto(13)
+ary = trans.translate_upto(39)
 
 print ary
