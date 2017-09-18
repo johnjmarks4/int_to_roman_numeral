@@ -4,6 +4,7 @@ class Translator
 
   def initialize
     @num = ""
+    @ones = ""
     @roman = {
           1000 => "M",
           900 => "CM",
@@ -26,30 +27,31 @@ class Translator
     ary = []
     @num = ""
     (1..int).each do |i|
-      if i <= 10
-        @num = ones(i)
-      elsif i > 10
-        @num = tens(i)
+      @num = ""
+      if i > 10
+        @num = upto_forty(i)
+      elsif i <= 10
+        @num = upto_ten(i)
       end
       ary << @num
     end
     ary
   end
 
-  def tens(i)
-    "X" + ones(i - 10)
+  def upto_forty(i)
+    ("X" * (i / 10)) + upto_ten(i - 10)
   end
 
-  def ones(i)
+  def upto_ten(i)
     if @roman.key?(i)
-      @num = @roman[i]
+      @ones = @roman[i]
     else
-      @num += "I"
+      @ones += "I"
     end
   end
 end
 
 trans = Translator.new
-ary = trans.translate_upto(11)
+ary = trans.translate_upto(13)
 
-ary.each { |n| puts n }
+print ary
