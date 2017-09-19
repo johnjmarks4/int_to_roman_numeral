@@ -24,9 +24,13 @@ class Translator
   def translate_upto(i)
     ary = []
     @num = ""
-    #if @roman.key?(i)
-      #i < 10 ? @num = upto_nine(i) : @num = @roman[i]
-    if i >= 100
+    if @roman.key?(i)
+      i < 10 ? @num = upto_nine(i) : @num = @roman[i]
+    elsif i >= 900
+      @num = upto_one_thousand(i)
+    elsif i >= 500
+      @num = upto_nine_hundred(i)
+    elsif i >= 100
       @num = upto_five_hundred(i)
     elsif i >= 90
       @num = upto_one_hundred(i)
@@ -39,7 +43,25 @@ class Translator
     elsif i < 10
       @num = upto_nine(i)
     end
+    @ones = ""
     @num
+  end
+
+  def upto_one_thousand(i)
+    if i % 900 == 0
+      @roman[900]
+    else
+      @roman[900] + translate_upto(i - 900)
+    end
+  end
+
+  def upto_nine_hundred(i)
+    five_hundreds = (@roman[500] * (i.digits.last / 5))
+    if i % 500 == 0
+      five_hundreds
+    else
+      five_hundreds + translate_upto(i - ((i.digits.last / 5) * 500))
+    end
   end
 
   def upto_five_hundred(i)
@@ -75,21 +97,24 @@ class Translator
 
   def upto_nine(i)
     if @roman.key?(i)
-      @ones = @roman[i]
+      @ones = @roman[i] + @ones
     else
+      # Needs to find mapping number
       @ones += "I"
+      @ones = upto_nine(i -= 1)
     end
   end
 end
 
-# When finished, think of recursive solution
+# When finished, think of recursive solution if there is one
 
 trans = Translator.new
-int = 300
+int = 999
 ary = []
 
 (1..int).each do |i|
   ary << trans.translate_upto(i)
 end
 
-print ary
+#print ary
+print trans.translate_upto(801)
