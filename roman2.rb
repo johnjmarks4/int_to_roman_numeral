@@ -26,6 +26,8 @@ class Translator
     @num = ""
     if @roman.key?(i)
       i < 10 ? @num = upto_nine(i) : @num = @roman[i]
+    elsif i >= 1000
+      @num = upto_infinity(i)
     elsif i >= 900
       @num = upto_one_thousand(i)
     elsif i >= 500
@@ -45,6 +47,15 @@ class Translator
     end
     @ones = ""
     @num
+  end
+
+  def upto_infinity(i)
+    thousands = (@roman[1000] * i.digits.last)
+    if i % 1000 == 0
+      thousands
+    else
+      thousands + translate_upto(i - (i.digits.last * 1000))
+    end
   end
 
   def upto_one_thousand(i)
@@ -99,7 +110,6 @@ class Translator
     if @roman.key?(i)
       @ones = @roman[i] + @ones
     else
-      # Needs to find mapping number
       @ones += "I"
       @ones = upto_nine(i -= 1)
     end
@@ -109,12 +119,16 @@ end
 # When finished, think of recursive solution if there is one
 
 trans = Translator.new
-int = 999
-ary = []
 
-(1..int).each do |i|
-  ary << trans.translate_upto(i)
-end
-
+#ary = []
+#(1..int).each do |i|
+  #ary << trans.translate_upto(i)
+#end
 #print ary
-print trans.translate_upto(801)
+
+print "Type any number between 1 and 4999\n\n"
+loop do
+  int = gets.chomp!.to_i
+  next if int == 0
+  puts trans.translate_upto(int)
+end
