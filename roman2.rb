@@ -1,5 +1,3 @@
-public
-
 class Translator
 
   def initialize
@@ -23,19 +21,27 @@ class Translator
   end
 
 
-  def translate_upto(int)
+  def translate_upto(i)
     ary = []
     @num = ""
-    (1..int).each do |i|
-      @num = ""
-      if i >= 10
-        @num = upto_forty(i)
-      elsif i < 10
-        @num = upto_nine(i)
-      end
-      ary << @num
+    if @roman.key?(i)
+      i < 10 ? @num = upto_nine(i) : @num = @roman[i]
+    elsif i >= 40
+      @num = upto_fifty(i)
+    elsif i >= 10
+      @num = upto_forty(i)
+    elsif i < 10
+      @num = upto_nine(i)
     end
-    ary
+    @num
+  end
+
+  #def upto_ninety(i)
+    #@roman[50] + 
+  #end
+
+  def upto_fifty(i)
+    @roman[40] + upto_nine(i.digits.first)
   end
 
   def upto_forty(i)
@@ -58,6 +64,11 @@ class Translator
 end
 
 trans = Translator.new
-ary = trans.translate_upto(39)
+int = 40
+ary = []
+
+(1..int).each do |i|
+  ary << trans.translate_upto(i)
+end
 
 print ary
